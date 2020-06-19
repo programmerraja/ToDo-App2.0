@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>ToDo App</title>
+        <style>
+body {
+  background-color:black;   
+}
+
+ header{
+     font-size:2rem;
+     color:green;
+     text-align:center;
+ }
+/*image container set 50% to browser*/
+.image{
+    height:50vh;
+    border:3px green solid;
+}
+/* set image to 100% for container*/
+.image img
+{
+    width:100%;
+    height:100%;
+     
+}
+/* input and add icon container*/
+.todo_container
+{
+    display:flex;
+    background-color:#87ceeb;
+    justify-content:space-between;
+
+}
+/*input box */
+.todo_container input[type="text"]
+{
+    width:70%;
+    height:5.0rem;
+    font-size:4.7rem;
+
+}
+/*add icon*/
+.todo_container img
+{
+    
+    height:5.0rem;
+    background-color:#87ceeb;
+    flex:2;
+    margin:0px;
+}
+
+/*the task */
+.task
+{
+    display:flex;
+     border-bottom-color:green;
+    border-bottom-width:2px;
+    border-bottom-style:solid ;
+    
+    
+    border-top-color:green;
+    border-top-width:2px;
+    border-top-style:solid ;
+    color:green;
+    height:5.0rem;
+    font-size:4.2rem;
+    justify-content:space-between;
+    margin-top:20px;
+    padding-left:10px;
+    animation-name:Fadein;
+    animation-duration:1s;
+}
+/* check and remove img*/
+.task img
+{
+    height:4.9rem;
+}
+/* the content*/
+.task li 
+{
+    flex:1;
+    font-style:bold;
+    list-style:none;    
+}
+.task input
+{
+ background-image:url("https://image.flaticon.com/icons/svg/1828/1828843.svg");
+    
+}
+/* animation for task*/
+@keyframes Fadein
+{
+    from
+    {
+         transform:translateX(-200px);
+    }
+    to{
+        transform:translateX (0);
+    }
+}
+
+@keyframes Fadeout
+{
+    from
+    {
+         transform:translateY(0px);
+         opacity:.8;
+    }
+    to{
+        transform:translateY(100px);
+        opacity:0;
+    }
+}
+/* media query for tablet and computer*/
+@media screen and (min-device-width: 450px)
+{
+body
+{
+    margin:auto; 
+    background-color:black;
+}   
+ .container
+ {
+    width:100%;
+    text-align: center;
+    margin-top: 5%;
+ }
+.image{
+    height:50vh;
+    border:none;
+}
+.image img
+{
+    width:51%;
+    height:100%;
+     
+}
+
+/*input and add icon container*/
+.todo_container
+{
+    display:flex;
+    width:51%;
+    margin: auto;
+    background-color:#87ceeb;
+    justify-content:space-between;
+}
+/*entry box */
+.todo_container input[type="text"]
+{
+    width:85%;
+    height:2.3rem;
+    font-size:2.0rem;
+
+}
+/*add icon*/
+.todo_container img
+{
+    
+    height:2.3rem;
+    background-color:#87ceeb;
+    flex:2;
+    margin:0px;
+}
+/* container for task*/
+.task
+{
+    display:flex;
+    width: 50%; 
+    height:2.3rem;
+    border-bottom-color:green;
+    border-bottom-width:2px;
+    border-bottom-style:solid ;
+    border-top-color:green;
+    border-top-width:2px;
+    border-top-style:solid ;
+    font-size:2.0rem;
+    color:green;
+    justify-content:space-between;
+    margin-left: auto;
+    margin-right: auto; 
+    
+}
+/* check and delte image*/
+.task img
+{
+    height:2.4rem;
+}
+.task li 
+{
+    flex:1;
+    font-style:bold;
+    list-style:none;
+    text-align:justify;     
+}
+.task input
+{
+ background-image:url("https://image.flaticon.com/icons/svg/1828/1828843.svg");
+    
+}
+}
+
+</style>
+        <script >
+//images for banner 
+images=["https://www.success.com/wp-content/uploads/legacy/sites/default/files/5_18.jpg","https://www.success.com/wp-content/uploads/legacy/sites/default/files/1_16.jpg","https://www.success.com/wp-content/uploads/legacy/sites/default/files/12_17.jpg",
+"https://www.success.com/wp-content/uploads/legacy/sites/default/files/new11.jpg","https://www.success.com/wp-content/uploads/legacy/sites/default/files/new3.jpg"]
+
+var index=1;
+
+var task_array=[]
+/* for debugging purpose*/
+function print(a){
+    console.log(a)
+}
+//program start
+function start()
+{
+    let button_add=
+    document.getElementById("but_add");
+   changePicture(); 
+   button_add.addEventListener("click",addList)
+   //show stored task
+   showtask();
+    
+}
+function addList (event,temp_task,checked)
+{
+    
+    let task=
+    document.getElementById("task_val");
+    //if user enter or in local storage
+    if(task.value || temp_task)
+    {
+    // Creataing div tag
+    let div_tag=document.createElement("div")
+    div_tag.classList.add("task");
+    //if local storage task
+    if(temp_task)
+    {
+        val=temp_task;
+    }
+    //if user entered task we need to store in local storage
+    else
+    {
+        val=task.value;
+         saveTask(val);
+    }
+    //adding html elememts
+    div_tag.innerHTML="<li>"+val+"</li><img class='check' src='https://image.flaticon.com/icons/svg/929/929440.svg' name='checked' height=50px><img class='delete' src='https://image.flaticon.com/icons/svg/1828/1828843.svg'  height=50px><br/>";
+    
+    task.value="";
+    
+    let jobs=
+    document.getElementsByClassName("task_container")
+    //apppending the taskcontainer
+    jobs[0].appendChild(div_tag )
+    //adding listener to divtag
+    div_tag.addEventListener("click",deleteCheck)
+    //if local storage task is checked
+    if(checked==="true")
+    {
+      div_tag.style="text-decoration:line-through;opacity:.3;"
+      div_tag.childNodes[1].name="unchecked"
+    }
+    }
+}
+
+function deleteCheck(event)
+{
+
+let item=event.target
+//getting parentnode (div)
+parent=item.parentNode
+
+
+
+//if delete is clicked
+if(item.classList[0]=="delete")
+{
+deleteLocal(parent.childNodes[0].innerText)
+//adding animation while rmoving task
+parent.style="animation-name:Fadeout";
+parent.addEventListener("animationend",function(){
+    parent.remove();
+})
+
+
+}
+//if checked is  clicked
+if(item.classList[0]=="check")
+{
+  if(item.name==="checked")
+  {
+    parent.style
+    ="text-decoration:line-through;opacity:.3;"
+    item.name="unchecked"
+    checklocal(parent.childNodes[0].innerText,true) 
+  }
+  else
+  {
+      parent.style
+      ="text-decoration:none;opacity:1;"
+      item.name="checked"
+      checklocal(parent.childNodes[0].innerText,false) 
+  }
+    
+}
+}
+//saving task to local storage 
+function saveTask(task)
+{
+        task_array.push([task,"false"])
+        localStorage.setItem("task_array",JSON.stringify(task_array)) 
+}
+
+//adding task if it store in local storage
+function showtask()
+{
+    
+    if( localStorage.getItem("task_array")!==null)
+    {
+     task_array=JSON.parse(localStorage.getItem("task_array"))
+
+     for(let i=0;i<task_array.length;i++)
+     {
+        addList(0,task_array[i][0],task_array[i][1])
+
+     }
+    
+    }
+}
+function deleteLocal(task_name)
+{
+     if( localStorage.getItem("task_array")!==null)
+    {
+     task_array=JSON.parse(localStorage.getItem("task_array"))
+
+     for(let i=0;i<task_array.length;i++)
+     {
+        if(task_name===task_array[i][0])
+        {
+            task_array.splice(i,1)
+            }
+
+     }
+     localStorage.setItem("task_array",JSON.stringify(task_array)) 
+
+   
+    }
+}
+
+function   checklocal(task_name,checked) {
+
+    
+ if( localStorage.getItem("task_array")!==null)
+    {
+     task_array=JSON.parse(localStorage.getItem("task_array"))
+
+     for(let i=0;i<task_array.length;i++)
+     {
+        if(task_name===task_array[i][0])
+        {
+            if(checked)
+            {
+            task_array[i][1]="true";
+            }
+            else{
+                task_array[i][1]="false";
+            }
+        }
+
+     }
+      localStorage.setItem("task_array",JSON.stringify(task_array)) 
+
+   
+    }
+
+
+}
+function changePicture()
+{
+    let img=document.getElementById("bg");
+    img.src=images[index-1]
+    index+=1
+    if(index>images.length){
+        index=1;
+    }
+    
+}
+
+setInterval(changePicture,5000);
+
+onload=start
+
+    </script>
+    </head>
+    <body>
+         <header>
+        TODO App 2.0
+    </header>
+     <br>
+        <div class="container">
+            <div class="image">
+                <img id="bg"  >
+            </div>
+            
+            <div class="todo_container">
+                <input id="task_val" type="text" placeholder="Enter you task">
+                <img id="but_add" src="https://image.flaticon.com/icons/svg/1828/1828817.svg" >
+            </div>
+            <div class="task_container">
+            <ul class="task_list">
+                </ul>
+            </div>
+        </div> 
+    </body>
+</html>
